@@ -6,7 +6,7 @@ namespace Jokuf\Site\Tests\Stub\Gateway;
 
 use Jokuf\Site\Entity\Page;
 
-class InMemoryStorageGateway implements \Jokuf\Site\Gateway\IPageGateway
+class InMemoryStorageGatewayInterface implements \Jokuf\Site\Gateway\PageGatewayInterface
 {
     private $id=0;
     private $pages;

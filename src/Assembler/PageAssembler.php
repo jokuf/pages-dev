@@ -21,36 +21,23 @@ class PageAssembler
         $this->pageContentAssembly = new PageContentAssembler();
     }
 
-    public function assembleEntity(PageDTO $dto): Page {
-        $contents = [];
-        foreach ($dto->getContents() as $content) {
-            $contents[] = $this->pageContentAssembly->assembleEntity($content);
-        }
-
+    public function assembleEntity(PageDTO $dto): Page
+    {
         return new Page(
-            $dto->getId(),
-            $dto->getParentPage(),
-            $contents,
+            $dto->getParent(),
+            $dto->getName(),
+            $dto->getTitle(),
+            $dto->getContent(),
+            $dto->getTags(),
             $dto->getLevel(),
             $dto->isLocked(),
-            $dto->getTemplate()
+            $dto->getTemplate(),
+            $dto->getImages()
         );
     }
 
-    public function assembleDTO(Page $page): PageDTO {
-        $contents = [];
-        foreach ($page->getContent()->getAll() as $content) {
-            $contents[] = $this->pageContentAssembly->assembleDTO($content);
-        }
+    public function assembleDTO(Page $page): PageDTO
+    {
 
-        return new PageDTO(
-            $page->getId(),
-            $page->getParent(),
-            $contents,
-            $page->getLevel(),
-            $page->isLocked(),
-            $page->getTemplate(),
-            $page->getImages()
-        );
     }
 }

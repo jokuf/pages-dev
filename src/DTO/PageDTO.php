@@ -9,15 +9,23 @@ class PageDTO
     /**
      * @var int|null
      */
-    private $id;
+    private $parent;
     /**
-     * @var int|null
+     * @var string
      */
-    private $parentPage;
+    private $name;
     /**
-     * @var PageContentDTO[]
+     * @var string
      */
-    private $contents;
+    private $title;
+    /**
+     * @var string
+     */
+    private $content;
+    /**
+     * @var array
+     */
+    private $tags;
     /**
      * @var int
      */
@@ -25,9 +33,9 @@ class PageDTO
     /**
      * @var bool
      */
-    private $isLocked;
+    private $locked;
     /**
-     * @var string|null
+     * @var string
      */
     private $template;
     /**
@@ -37,20 +45,25 @@ class PageDTO
 
     /**
      * PageDTO constructor.
-     * @param int|null $id
-     * @param int|null $parentPage
-     * @param array $contents
+     * @param int|null $parent
+     * @param string $name
+     * @param string $title
+     * @param string $content
+     * @param array $tags
      * @param int $level
-     * @param bool $isLocked
-     * @param string|null $template
+     * @param bool $locked
+     * @param string $template
      * @param array $images
      */
-    public function __construct(?int $id=null, ?int $parentPage=null, array $contents=[], int $level=0, bool $isLocked=false, ?string $template=null, array $images=[]) {
-        $this->id = $id;
-        $this->parentPage = $parentPage;
-        $this->contents = $contents;
+    public function __construct(?int $parent, string $name, string $title, string $content, array $tags, int $level, bool $locked, string $template, array $images)
+    {
+        $this->parent = $parent;
+        $this->name = $name;
+        $this->title = $title;
+        $this->content = $content;
+        $this->tags = $tags;
         $this->level = $level;
-        $this->isLocked = $isLocked;
+        $this->locked = $locked;
         $this->template = $template;
         $this->images = $images;
     }
@@ -58,25 +71,41 @@ class PageDTO
     /**
      * @return int|null
      */
-    public function getId(): ?int
+    public function getParent(): ?int
     {
-        return $this->id;
+        return $this->parent;
     }
 
     /**
-     * @return int|null
+     * @return string
      */
-    public function getParentPage(): ?int
+    public function getName(): string
     {
-        return $this->parentPage;
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
     }
 
     /**
      * @return array
      */
-    public function getContents(): array
+    public function getTags(): array
     {
-        return $this->contents;
+        return $this->tags;
     }
 
     /**
@@ -92,13 +121,13 @@ class PageDTO
      */
     public function isLocked(): bool
     {
-        return $this->isLocked;
+        return $this->locked;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getTemplate(): ?string
+    public function getTemplate(): string
     {
         return $this->template;
     }

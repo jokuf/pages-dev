@@ -7,12 +7,12 @@ namespace Jokuf\Site\Interactor;
 use Jokuf\Site\Assembler\PageAssembler;
 use Jokuf\Site\Boundary\IUpdatePageResponse;
 use Jokuf\Site\DTO\PageDTO;
-use Jokuf\Site\Gateway\IPageGateway;
+use Jokuf\Site\Gateway\PageGatewayInterface;
 
 class UpdatePageInteractor implements IUpdatePageResponse
 {
     /**
-     * @var IPageGateway
+     * @var PageGatewayInterface
      */
     private $gateway;
     /**
@@ -24,7 +24,7 @@ class UpdatePageInteractor implements IUpdatePageResponse
      */
     private $assembler;
 
-    public function __construct(IPageGateway $gateway, IUpdatePageResponse $response)
+    public function __construct(PageGatewayInterface $gateway, IUpdatePageResponse $response)
     {
         $this->assembler = new PageAssembler();
         $this->gateway = $gateway;
@@ -33,12 +33,8 @@ class UpdatePageInteractor implements IUpdatePageResponse
 
     public function present(PageDTO $pageDTO): void
     {
-        if (null === $pageDTO->getId()) {
-            throw new \DomainException('Cannot update page that not exists');
-        }
-
         $page = $this->assembler->assembleEntity($pageDTO);
-        $this->gateway->save($page);
+        $page->save($this->gateway);
 
         $this->response->present(
             $this->assembler->assembleDTO(

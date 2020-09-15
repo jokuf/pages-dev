@@ -4,106 +4,80 @@
 namespace Jokuf\Site\Entity;
 
 
+use Jokuf\Site\Gateway\PageGatewayInterface;
+
 class Page
 {
-    /** @var int */
-    protected $id;
-    /** @var int|null */
+    /**
+     * @var Page|null
+     */
     protected $parent;
-    /** @var PageContentCollection */
-    protected $contentCollection;
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $level;
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $locked;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $template;
+    /**
+     * @var string
+     */
+    private $content;
+    /**
+     * @var array
+     */
+    private $images;
+    /**
+     * @var string
+     */
+    private $name;
+    /**
+     * @var string
+     */
+    private $title;
+    /**
+     * @var array
+     */
+    private $tags;
 
     /**
      * Page constructor.
-     * @param int $id
-     * @param int|null $parent
-     * @param PageContent[] $contents
+     * @param Page|null $parent
+     * @param string $name
+     * @param string $title
+     * @param string $content
+     * @param array $tags
      * @param int $level
      * @param bool $locked
      * @param string $template
+     * @param array $images
      */
-    public function __construct(?int $id, ?int $parent, array $contents, int $level, bool $locked, string $template)
+    public function __construct(?Page $parent, string $name, string $title, string $content, array $tags, int $level, bool $locked, string $template, array $images)
     {
-        if (null !== $id) {
-            $this->setId($id);
-        }
-
-        if (null !== $parent && 1 > $parent) {
-            throw new \DomainException('Parent page id should be positive integer or null');
-        }
-
-        $this->id = $id;
-        $this->parent = $parent;
-        $this->contentCollection = new PageContentCollection(... $contents);
-        $this->level = $level;
-        $this->locked = $locked;
+        $this->parent   = $parent;
+        $this->level    = $level;
+        $this->locked   = $locked;
         $this->template = $template;
+        $this->content  = $content;
+        $this->images   = $images;
+        $this->name     = $name;
+        $this->title    = $title;
+        $this->tags     = $tags;
     }
 
-    public function setId(int $id) {
-        if (null !== $this->id) {
-            throw new \DomainException('Id already set');
-        }
-
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): ?int
+    public function save(PageGatewayInterface $storage): bool
     {
-        return $this->id;
+
     }
 
-    /**
-     * @return Page|null
-     */
-    public function getParent(): ?int
+    public function delete(PageGatewayInterface $gateway): bool
     {
-        return $this->parent;
+
     }
 
-    /**
-     * @return PageContentCollection
-     */
-    public function getContent(): PageContentCollection
-    {
-        return $this->contentCollection;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLevel(): int
-    {
-        return $this->level;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isLocked(): bool
-    {
-        return $this->locked;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplate(): string
-    {
-        return $this->template;
-    }
-
-    public function getImages()
-    {
-        return [];
-    }
 }

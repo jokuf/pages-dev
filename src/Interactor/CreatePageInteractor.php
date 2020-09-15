@@ -7,7 +7,7 @@ namespace Jokuf\Site\Interactor;
 use Jokuf\Site\Assembler\PageAssembler;
 use Jokuf\Site\Boundary\ICreatePageResponse;
 use Jokuf\Site\Entity\Page;
-use Jokuf\Site\Gateway\IPageGateway;
+use Jokuf\Site\Gateway\PageGatewayInterface;
 use Jokuf\Site\Boundary\ICreatePageRequest;
 use Jokuf\Site\DTO\PageDTO;
 
@@ -18,7 +18,7 @@ class CreatePageInteractor implements ICreatePageRequest
      */
     protected $page;
     /**
-     * @var IPageGateway
+     * @var PageGatewayInterface
      */
     private $pageGateway;
     /**
@@ -31,11 +31,11 @@ class CreatePageInteractor implements ICreatePageRequest
     private $pageAssembler;
 
     /**
-     * @param IPageGateway $pageGateway
+     * @param PageGatewayInterface $pageGateway
      * @param ICreatePageResponse $response
      */
     public function __construct(
-        IPageGateway $pageGateway,
+        PageGatewayInterface $pageGateway,
         ICreatePageResponse $response
     ) {
         $this->pageGateway = $pageGateway;
@@ -51,7 +51,7 @@ class CreatePageInteractor implements ICreatePageRequest
         $page = $this->pageAssembler->assembleEntity($pageDTO);
 
         // update the db
-        $this->pageGateway->save($page);
+        $page->save($this->pageGateway);
 
         // emit the response
         $this->response->present(

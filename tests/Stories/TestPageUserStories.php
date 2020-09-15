@@ -5,7 +5,7 @@ use Jokuf\Site\DTO\PageContentDTO;
 use Jokuf\Site\DTO\PageDTO;
 use Jokuf\Site\Entity\PageContent;
 use Jokuf\Site\Interactor\CreatePageInteractor;
-use Jokuf\Site\Tests\Stub\Gateway\InMemoryStorageGateway;
+use Jokuf\Site\Tests\Stub\Gateway\InMemoryStorageGatewayInterface;
 use Jokuf\Site\Tests\Stub\Presenter\DummyCreatePageResponse;
 
 class TestPageUserStories extends \PHPUnit\Framework\TestCase
@@ -14,7 +14,7 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$storage = new InMemoryStorageGateway();
+        self::$storage = new InMemoryStorageGatewayInterface();
     }
 
     public function testAsAUserIWantToCreateAPage() {
