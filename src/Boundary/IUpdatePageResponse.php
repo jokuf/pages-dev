@@ -4,9 +4,9 @@
 namespace Jokuf\Site\Boundary;
 
 
-use Jokuf\Site\DTO\PageDTO;
+use Jokuf\Site\DTO\CreatePageRequestDto;
 
 interface IUpdatePageResponse
 {
-    public function present(PageDTO $pageDTO): void;
+    public function present(CreatePageRequestDto $pageDTO): void;
 }

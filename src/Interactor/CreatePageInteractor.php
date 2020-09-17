@@ -5,11 +5,11 @@ namespace Jokuf\Site\Interactor;
 
 
 use Jokuf\Site\Assembler\PageAssembler;
-use Jokuf\Site\Boundary\ICreatePageResponse;
+use Jokuf\Site\Boundary\CreatePagePresenterInterface;
 use Jokuf\Site\Entity\Page;
 use Jokuf\Site\Gateway\PageGatewayInterface;
 use Jokuf\Site\Boundary\ICreatePageRequest;
-use Jokuf\Site\DTO\PageDTO;
+use Jokuf\Site\DTO\CreatePageRequestDto;
 
 class CreatePageInteractor implements ICreatePageRequest
 {
@@ -22,7 +22,7 @@ class CreatePageInteractor implements ICreatePageRequest
      */
     private $pageGateway;
     /**
-     * @var ICreatePageResponse
+     * @var CreatePagePresenterInterface
      */
     private $response;
     /**
@@ -32,18 +32,18 @@ class CreatePageInteractor implements ICreatePageRequest
 
     /**
      * @param PageGatewayInterface $pageGateway
-     * @param ICreatePageResponse $response
+     * @param CreatePagePresenterInterface $response
      */
     public function __construct(
         PageGatewayInterface $pageGateway,
-        ICreatePageResponse $response
+        CreatePagePresenterInterface $response
     ) {
         $this->pageGateway = $pageGateway;
         $this->response = $response;
-        $this->pageAssembler = new PageAssembler();
+        $this->pageAssembler = new PageAssembler($pageGateway);
     }
 
-    public function handle(PageDTO $pageDTO): void
+    public function handle(CreatePageRequestDto $pageDTO): void
     {
         // validate the dto
 
@@ -55,7 +55,7 @@ class CreatePageInteractor implements ICreatePageRequest
 
         // emit the response
         $this->response->present(
-            $this->pageAssembler->assembleDTO(
+            $this->pageAssembler->assmebleResponseDto(
                 $page
             )
         );

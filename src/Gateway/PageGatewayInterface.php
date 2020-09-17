@@ -4,12 +4,11 @@
 namespace Jokuf\Site\Gateway;
 
 
-use Jokuf\Site\Entity\Page;
+use Jokuf\Site\Data\PageData;
 
 interface PageGatewayInterface
 {
-    public function get(int $id): ?Page;
-    public function save(Page $page): void;
-    public function delete(Page $page): bool;
-    public function getBySlug(string $slug): ?Page;
+    public function save(PageData $data): void;
+    public function delete(PageData $data): bool;
+    public function getBySlug(string $slug): ?PageData;
 }

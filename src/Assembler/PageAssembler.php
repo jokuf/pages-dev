@@ -4,40 +4,69 @@
 namespace Jokuf\Site\Assembler;
 
 
+use Jokuf\Site\Data\PageData;
+use Jokuf\Site\DTO\CreatePageResponseDto;
 use Jokuf\Site\Entity\Page;
-use Jokuf\Site\DTO\PageDTO;
+use Jokuf\Site\DTO\CreatePageRequestDto;
+use Jokuf\Site\Gateway\PageGatewayInterface;
 
 class PageAssembler
 {
     /**
-     * @var PageContentAssembler
+     * @var PageGatewayInterface
      */
-    private $pageContentAssembly;
+    private $pageGateway;
 
     /**
      * PageAssembler constructor.
+     * @param PageGatewayInterface $pageGateway
      */
-    public function __construct() {
-        $this->pageContentAssembly = new PageContentAssembler();
+    public function __construct(PageGatewayInterface $pageGateway) {
+        $this->pageGateway = $pageGateway;
     }
 
-    public function assembleEntity(PageDTO $dto): Page
+    public function assembleEntity(CreatePageRequestDto $request): Page
     {
+        $parentPage = null;
+        if ($parentPageSlug = $request->getParentPageSlug()) {
+            $data = $this->pageGateway->getBySlug($parentPageSlug);
+            $parentPage = new Page(
+                $data->getSlug(),
+                null,
+                $data->getName(),
+                $data->getTitle(),
+                $data->getContent(),
+                $data->getTags(),
+                $data->getLevel(),
+                $data->isLocked(),
+                $data->getTemplate()
+            );
+        }
+
         return new Page(
-            $dto->getParent(),
-            $dto->getName(),
-            $dto->getTitle(),
-            $dto->getContent(),
-            $dto->getTags(),
-            $dto->getLevel(),
-            $dto->isLocked(),
-            $dto->getTemplate(),
-            $dto->getImages()
+            null,
+            $parentPage,
+            $request->getName(),
+            $request->getTitle(),
+            $request->getContent(),
+            $request->getTags(),
+            $request->getLevel(),
+            $request->isLocked(),
+            $request->getTemplate()
         );
     }
 
-    public function assembleDTO(Page $page): PageDTO
+    public function assmebleResponseDto(Page $page): CreatePageResponseDto
     {
-
+        return new CreatePageResponseDto(
+            $page->getSlug(),
+            $page->getName(),
+            $page->getTitle(),
+            $page->getContent(),
+            $page->getTags(),
+            $page->getLevel(),
+            $page->isLocked(),
+            $page->getTemplate()
+        );
     }
 }

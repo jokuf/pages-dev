@@ -1,25 +1,25 @@
 <?php
 
 
-namespace Jokuf\Site\DTO;
+namespace Jokuf\Site\Data;
 
 
-class PageDTO
+class PageData
 {
     /**
-     * @var int|null
+     * @var string|null
      */
-    private $parent;
+    private $slug;
     /**
-     * @var string
+     * @var string|null
      */
     private $name;
     /**
-     * @var string
+     * @var string|null
      */
     private $title;
     /**
-     * @var string
+     * @var string|null
      */
     private $content;
     /**
@@ -35,7 +35,7 @@ class PageDTO
      */
     private $locked;
     /**
-     * @var string
+     * @var string|null
      */
     private $template;
     /**
@@ -43,21 +43,19 @@ class PageDTO
      */
     private $images;
 
-    /**
-     * PageDTO constructor.
-     * @param int|null $parent
-     * @param string $name
-     * @param string $title
-     * @param string $content
-     * @param array $tags
-     * @param int $level
-     * @param bool $locked
-     * @param string $template
-     * @param array $images
-     */
-    public function __construct(?int $parent, string $name, string $title, string $content, array $tags, int $level, bool $locked, string $template, array $images)
-    {
-        $this->parent = $parent;
+    public function __construct(
+        string $slug=null,
+        string $name=null,
+        string $title=null,
+        string $content=null,
+        array $tags=[],
+        int $level=0,
+        bool $locked=false,
+        string $template=null,
+        array $images=[]
+    ) {
+        // parent page
+        $this->slug = $slug;
         $this->name = $name;
         $this->title = $title;
         $this->content = $content;
@@ -69,33 +67,33 @@ class PageDTO
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getParent(): ?int
+    public function getSlug(): ?string
     {
-        return $this->parent;
+        return $this->slug;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getContent(): string
+    public function getContent(): ?string
     {
         return $this->content;
     }
@@ -125,9 +123,9 @@ class PageDTO
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTemplate(): string
+    public function getTemplate(): ?string
     {
         return $this->template;
     }

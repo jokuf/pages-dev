@@ -6,7 +6,7 @@ namespace Jokuf\Site\Interactor;
 
 use Jokuf\Site\Assembler\PageAssembler;
 use Jokuf\Site\Boundary\IUpdatePageResponse;
-use Jokuf\Site\DTO\PageDTO;
+use Jokuf\Site\DTO\CreatePageRequestDto;
 use Jokuf\Site\Gateway\PageGatewayInterface;
 
 class UpdatePageInteractor implements IUpdatePageResponse
@@ -31,13 +31,13 @@ class UpdatePageInteractor implements IUpdatePageResponse
         $this->response = $response;
     }
 
-    public function present(PageDTO $pageDTO): void
+    public function present(CreatePageRequestDto $pageDTO): void
     {
         $page = $this->assembler->assembleEntity($pageDTO);
         $page->save($this->gateway);
 
         $this->response->present(
-            $this->assembler->assembleDTO(
+            $this->assembler->assmebleResponseDto(
                 $page
             )
         );

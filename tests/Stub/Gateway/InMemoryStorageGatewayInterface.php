@@ -4,31 +4,26 @@
 namespace Jokuf\Site\Tests\Stub\Gateway;
 
 
+use Jokuf\Site\Data\PageData;
 use Jokuf\Site\Entity\Page;
 
 class InMemoryStorageGatewayInterface implements \Jokuf\Site\Gateway\PageGatewayInterface
 {
-    private $id=0;
     private $pages;
 
-    public function get(int $id): ?Page
+    public function save(PageData $data): void
     {
-        return $this->pages[$id] ?? null;
-    }
-
-    public function save(Page $page): void
-    {
-        if (null === $page->getId()) {
-            $page->setId(++$this->id);
+        if ($data->getSlug() === null || empty($data->getSlug())) {
+            throw new \InvalidArgumentException();
         }
 
-        $this->pages[$this->id] = $page;
+        $this->pages[$data->getSlug()] = $data;
     }
 
-    public function delete(Page $page): bool
+    public function delete(PageData $data): bool
     {
-        if (array_key_exists($page->getId(), $this->pages)) {
-            unset($this->pages[$page->getId()]);
+        if (array_key_exists($data->getSlug(), $this->pages)) {
+            unset($this->pages[$data->getSlug()]);
 
             return true;
         }
@@ -36,18 +31,8 @@ class InMemoryStorageGatewayInterface implements \Jokuf\Site\Gateway\PageGateway
         return false;
     }
 
-    public function getBySlug(string $slug): ?Page
+    public function getBySlug(string $slug): ?PageData
     {
-
-    }
-
-    public function getAll(string $language, int $level): array
-    {
-        return $this->pages;
-    }
-
-    public function getHomepage(): ?array
-    {
-        return [];
+        return $this->pages[$slug] ?? null;
     }
 }

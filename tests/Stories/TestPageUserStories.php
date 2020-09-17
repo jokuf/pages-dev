@@ -2,11 +2,12 @@
 namespace Jokuf\Site\Tests\Stories;
 
 use Jokuf\Site\DTO\PageContentDTO;
-use Jokuf\Site\DTO\PageDTO;
+use Jokuf\Site\DTO\CreatePageRequestDto;
+use Jokuf\Site\Entity\Page;
 use Jokuf\Site\Entity\PageContent;
 use Jokuf\Site\Interactor\CreatePageInteractor;
 use Jokuf\Site\Tests\Stub\Gateway\InMemoryStorageGatewayInterface;
-use Jokuf\Site\Tests\Stub\Presenter\DummyCreatePageResponse;
+use Jokuf\Site\Tests\Stub\Presenter\DummyCreatePagePresenterInterface;
 
 class TestPageUserStories extends \PHPUnit\Framework\TestCase
 {
@@ -20,59 +21,47 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
     public function testAsAUserIWantToCreateAPage() {
         $useCase = new CreatePageInteractor(
             self::$storage,
-            new DummyCreatePageResponse()
+            new DummyCreatePagePresenterInterface()
         );
 
-        $pageDTO = new PageDTO(
+        $pageDTO = new CreatePageRequestDto(
             null,
-            null,
-            [
-                new PageContentDTO(
-                    null,
-                    'Homepage',
-                    'Welcome home',
-                    'long description',
-                    ['test', 'test2'],
-                    'bg'
-                )
-            ],
+            'Homepage',
+            'Welcome home',
+            'long description',
+            ['test', 'test2'],
             0,
             false,
-            'homepage',
-            []
+            'homepage'
         );
         $useCase->handle($pageDTO);
 
-        $this->assertNotNull(self::$storage->get(1));
+        $this->assertNotNull(self::$storage->getBySlug('/homepage'));
     }
+
     public function testAsAUserIWantToAddNewLanguageVersionToAPage() {
         $this->assertTrue(true);
     }
 
-    public function testAsAUserIWantToUpdateLanguageVersionOfAPage() {
-        $page = self::$storage->get(1);
+    public function testAsAUserIwantToUpdatePageContent() {
+        $page = self::$storage->getBySlug('/homepage');
 
         $this->assertNotNull($page);
+        $name = $page->getName();
+        $title = $page->getTitle();
+        $content = $page->getContent();
 
-        $initialContent = $page->getContent()->getBy('bg');
 
-        $this->assertNotNull($initialContent);
-
-        $content = new PageContent(
-            $initialContent->getId(),
-            $initialContent->getName(),
-            $initialContent->getTitle(),
-            $initialContent->getContent() .' - '. 'test',
-            ['tag1', 'tag2'],
-            $initialContent->getLanguage()
+        $entity = new Page(
+            '/homepage', null,$name, "$title - modified", "$content - modified", ['tag1', 'tag2'], 0, false, 'homepage'
         );
 
-        $page->getContent()->remove($initialContent);
-        $page->getContent()->addContent($content);
+        $entity->save(self::$storage);
 
-        self::$storage->save($page);
+        $modifiedPage = self::$storage->getBySlug('/homepage');
 
-        $this->assertEquals($content, self::$storage->get($page->getId())->getContent()->getBy('bg'));
+        $this->assertNotEquals($page->getTitle(), $modifiedPage->getTitle());
+        $this->assertNotEquals($page->getContent(), $modifiedPage->getContent());
     }
 
     public function testAsAUserIWantToGetPageById() {
@@ -93,5 +82,10 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
 
     public function testAsUserIWantToUpdateAPage() {
         $this->assertTrue(true);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        var_dump(self::$storage);
     }
 }
