@@ -5,18 +5,18 @@ namespace Jokuf\Site\Interactor;
 
 
 use Jokuf\Site\Assembler\PageAssembler;
-use Jokuf\Site\Boundary\IUpdatePageResponse;
+use Jokuf\Site\Boundary\UpdatePageResponseInterface;
 use Jokuf\Site\DTO\CreatePageRequestDto;
 use Jokuf\Site\Gateway\PageGatewayInterface;
 
-class UpdatePageInteractor implements IUpdatePageResponse
+class UpdatePageInteractorInterface implements UpdatePageResponseInterface
 {
     /**
      * @var PageGatewayInterface
      */
     private $gateway;
     /**
-     * @var IUpdatePageResponse
+     * @var UpdatePageResponseInterface
      */
     private $response;
     /**
@@ -24,7 +24,7 @@ class UpdatePageInteractor implements IUpdatePageResponse
      */
     private $assembler;
 
-    public function __construct(PageGatewayInterface $gateway, IUpdatePageResponse $response)
+    public function __construct(PageGatewayInterface $gateway, UpdatePageResponseInterface $response)
     {
         $this->assembler = new PageAssembler();
         $this->gateway = $gateway;

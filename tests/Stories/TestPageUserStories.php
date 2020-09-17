@@ -5,7 +5,7 @@ use Jokuf\Site\DTO\PageContentDTO;
 use Jokuf\Site\DTO\CreatePageRequestDto;
 use Jokuf\Site\Entity\Page;
 use Jokuf\Site\Entity\PageContent;
-use Jokuf\Site\Interactor\CreatePageInteractor;
+use Jokuf\Site\Interactor\CreatePageInteractorInterface;
 use Jokuf\Site\Tests\Stub\Gateway\InMemoryStorageGatewayInterface;
 use Jokuf\Site\Tests\Stub\Presenter\DummyCreatePagePresenterInterface;
 
@@ -19,7 +19,7 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
     }
 
     public function testAsAUserIWantToCreateAPage() {
-        $useCase = new CreatePageInteractor(
+        $useCase = new CreatePageInteractorInterface(
             self::$storage,
             new DummyCreatePagePresenterInterface()
         );

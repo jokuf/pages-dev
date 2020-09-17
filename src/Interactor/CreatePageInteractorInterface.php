@@ -8,10 +8,10 @@ use Jokuf\Site\Assembler\PageAssembler;
 use Jokuf\Site\Boundary\CreatePagePresenterInterface;
 use Jokuf\Site\Entity\Page;
 use Jokuf\Site\Gateway\PageGatewayInterface;
-use Jokuf\Site\Boundary\ICreatePageRequest;
+use Jokuf\Site\Boundary\CreatePageRequestInterface;
 use Jokuf\Site\DTO\CreatePageRequestDto;
 
-class CreatePageInteractor implements ICreatePageRequest
+class CreatePageInteractorInterface implements CreatePageRequestInterface
 {
     /**
      * @var Page
