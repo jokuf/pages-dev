@@ -4,9 +4,9 @@
 namespace Jokuf\Site\Boundary;
 
 
-use Jokuf\Site\DTO\CreatePageRequestDto;
+use Jokuf\Site\DTO\UpdatePageRequestDto;
 
 interface UpdatePageRequestInterface
 {
-    public function handle(CreatePageRequestDto $page): void;
+    public function handle(UpdatePageRequestDto $page): void;
 }

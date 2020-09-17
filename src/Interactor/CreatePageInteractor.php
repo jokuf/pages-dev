@@ -11,7 +11,7 @@ use Jokuf\Site\Gateway\PageGatewayInterface;
 use Jokuf\Site\Boundary\CreatePageRequestInterface;
 use Jokuf\Site\DTO\CreatePageRequestDto;
 
-class CreatePageInteractorInterface implements CreatePageRequestInterface
+class CreatePageInteractor implements CreatePageRequestInterface
 {
     /**
      * @var Page

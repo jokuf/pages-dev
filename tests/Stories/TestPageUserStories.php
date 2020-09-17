@@ -1,13 +1,13 @@
 <?php
 namespace Jokuf\Site\Tests\Stories;
 
-use Jokuf\Site\DTO\PageContentDTO;
 use Jokuf\Site\DTO\CreatePageRequestDto;
-use Jokuf\Site\Entity\Page;
-use Jokuf\Site\Entity\PageContent;
-use Jokuf\Site\Interactor\CreatePageInteractorInterface;
+use Jokuf\Site\DTO\UpdatePageRequestDto;
+use Jokuf\Site\Interactor\CreatePageInteractor;
+use Jokuf\Site\Interactor\UpdatePageInteractor;
 use Jokuf\Site\Tests\Stub\Gateway\InMemoryStorageGatewayInterface;
 use Jokuf\Site\Tests\Stub\Presenter\DummyCreatePagePresenterInterface;
+use Jokuf\Site\Tests\Stub\Presenter\UpdatePagePresenter;
 
 class TestPageUserStories extends \PHPUnit\Framework\TestCase
 {
@@ -19,7 +19,7 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
     }
 
     public function testAsAUserIWantToCreateAPage() {
-        $useCase = new CreatePageInteractorInterface(
+        $useCase = new CreatePageInteractor(
             self::$storage,
             new DummyCreatePagePresenterInterface()
         );
@@ -43,25 +43,25 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
         $this->assertTrue(true);
     }
 
-    public function testAsAUserIwantToUpdatePageContent() {
-        $page = self::$storage->getBySlug('/homepage');
-
-        $this->assertNotNull($page);
-        $name = $page->getName();
-        $title = $page->getTitle();
-        $content = $page->getContent();
-
-
-        $entity = new Page(
-            '/homepage', null,$name, "$title - modified", "$content - modified", ['tag1', 'tag2'], 0, false, 'homepage'
+    public function testAsAUserIWantToUpdatePageContent() {
+        $request = new UpdatePageRequestDto(
+            '/homepage',
+            'jokuf-asdfa',
+            null,
+            null,
+            [],
+            5,
+            true
         );
 
-        $entity->save(self::$storage);
+        $response = new UpdatePagePresenter();
+        $useCase = new UpdatePageInteractor(self::$storage,$response);
+        $useCase->handle($request);
 
-        $modifiedPage = self::$storage->getBySlug('/homepage');
 
-        $this->assertNotEquals($page->getTitle(), $modifiedPage->getTitle());
-        $this->assertNotEquals($page->getContent(), $modifiedPage->getContent());
+        $this->assertEquals('jokuf-asdfa', $response->value->getName());
+        $this->assertEquals('Welcome home', $response->value->getTitle());
+        $this->assertNotEquals('/homepage', $response->value->getSlug());
     }
 
     public function testAsAUserIWantToGetPageById() {
@@ -86,6 +86,5 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
 
     public static function tearDownAfterClass(): void
     {
-        var_dump(self::$storage);
     }
 }
