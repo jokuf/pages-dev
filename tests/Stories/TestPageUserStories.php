@@ -39,10 +39,6 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
         $this->assertNotNull(self::$storage->getBySlug('/homepage'));
     }
 
-    public function testAsAUserIWantToAddNewLanguageVersionToAPage() {
-        $this->assertTrue(true);
-    }
-
     public function testAsAUserIWantToUpdatePageContent() {
         $request = new UpdatePageRequestDto(
             '/homepage',
@@ -64,15 +60,7 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
         $this->assertNotEquals('/homepage', $response->value->getSlug());
     }
 
-    public function testAsAUserIWantToGetPageById() {
-        $this->assertTrue(true);
-    }
-
     public function testAsAUserIWantToGetPageBySlug() {
-        $this->assertTrue(true);
-    }
-
-    public function testAsAUserIWantToDeletePageLanguageVersion() {
         $this->assertTrue(true);
     }
 
@@ -82,9 +70,5 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
 
     public function testAsUserIWantToUpdateAPage() {
         $this->assertTrue(true);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
     }
 }
