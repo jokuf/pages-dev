@@ -137,6 +137,15 @@ class Page
         return $this;
     }
 
+    /**
+     * @param PageGatewayInterface $storage
+     * @return Page[]
+     */
+    public function getChildren(PageGatewayInterface $storage): array
+    {
+
+    }
+
     public function updateTitle(string $title): self
     {
         $this->markDirty('title');

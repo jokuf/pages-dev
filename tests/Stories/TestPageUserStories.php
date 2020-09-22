@@ -2,11 +2,17 @@
 namespace Jokuf\Site\Tests\Stories;
 
 use Jokuf\Site\DTO\CreatePageRequestDto;
+use Jokuf\Site\DTO\DeletePageRequestDto;
+use Jokuf\Site\DTO\GetPageRequestDto;
 use Jokuf\Site\DTO\UpdatePageRequestDto;
 use Jokuf\Site\Interactor\CreatePageInteractor;
+use Jokuf\Site\Interactor\DeletePageInteractor;
+use Jokuf\Site\Interactor\ReadSinglePageInteractor;
 use Jokuf\Site\Interactor\UpdatePageInteractor;
 use Jokuf\Site\Tests\Stub\Gateway\InMemoryStorageGatewayInterface;
+use Jokuf\Site\Tests\Stub\Presenter\DeletePagePresenter;
 use Jokuf\Site\Tests\Stub\Presenter\DummyCreatePagePresenterInterface;
+use Jokuf\Site\Tests\Stub\Presenter\GetPagePresenter;
 use Jokuf\Site\Tests\Stub\Presenter\UpdatePagePresenter;
 
 class TestPageUserStories extends \PHPUnit\Framework\TestCase
@@ -18,7 +24,8 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
         self::$storage = new InMemoryStorageGatewayInterface();
     }
 
-    public function testAsAUserIWantToCreateAPage() {
+    public function testAsAUserIWantToCreateAPage()
+    {
         $useCase = new CreatePageInteractor(
             self::$storage,
             new DummyCreatePagePresenterInterface()
@@ -39,7 +46,8 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
         $this->assertNotNull(self::$storage->getBySlug('/homepage'));
     }
 
-    public function testAsAUserIWantToUpdatePageContent() {
+    public function testAsAUserIWantToUpdatePageContent()
+    {
         $request = new UpdatePageRequestDto(
             '/homepage',
             'jokuf-asdfa',
@@ -60,12 +68,43 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
         $this->assertNotEquals('/homepage', $response->value->getSlug());
     }
 
-    public function testAsAUserIWantToGetPageBySlug() {
-        $this->assertTrue(true);
+    public function testAsAUserIWantToGetPageBySlug()
+    {
+        $presenter = new GetPagePresenter();
+        $case = new ReadSinglePageInteractor(
+            self::$storage,
+            $presenter
+        );
+
+        $case->handle(new GetPageRequestDto('/homepage'));
+
+
+        $this->assertEquals('Welcome home', $presenter->value->getTitle());
     }
 
-    public function testAsUserIWantToDeleteAPage() {
-        $this->assertTrue(true);
+    public function testAsUserIWantToDeleteAPage()
+    {
+        $presenter = new DeletePagePresenter();
+        $useCase = new DeletePageInteractor(
+            self::$storage,
+            $presenter
+        );
+
+        $useCase->handle(
+            new DeletePageRequestDto(
+                '/homepage'
+            )
+        );
+
+        $this->assertTrue($presenter->value->isSuccessful());
+
+        $useCase->handle(
+            new DeletePageRequestDto(
+                '/homepage'
+            )
+        );
+
+        $this->assertFalse($presenter->value->isSuccessful());
     }
 
     public function testAsUserIWantToUpdateAPage() {

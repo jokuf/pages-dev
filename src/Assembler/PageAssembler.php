@@ -5,7 +5,7 @@ namespace Jokuf\Site\Assembler;
 
 
 use Jokuf\Site\Data\PageData;
-use Jokuf\Site\DTO\CreatePageResponseDto;
+use Jokuf\Site\DTO\ConcretePageResponseDto;
 use Jokuf\Site\Entity\Page;
 use Jokuf\Site\DTO\CreatePageRequestDto;
 use Jokuf\Site\Gateway\PageGatewayInterface;
@@ -56,9 +56,9 @@ class PageAssembler
         );
     }
 
-    public function assmebleResponseDto(Page $page): CreatePageResponseDto
+    public function assembleResponseDto(Page $page): ConcretePageResponseDto
     {
-        return new CreatePageResponseDto(
+        return new ConcretePageResponseDto(
             $page->getSlug(),
             $page->getName(),
             $page->getTitle(),

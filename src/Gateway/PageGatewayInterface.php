@@ -11,4 +11,5 @@ interface PageGatewayInterface
     public function save(PageData $data): void;
     public function delete(PageData $data): bool;
     public function getBySlug(string $slug): ?PageData;
+    public function getChildrenOf(string $slug): array;
 }

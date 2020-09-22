@@ -35,4 +35,9 @@ class InMemoryStorageGatewayInterface implements \Jokuf\Site\Gateway\PageGateway
     {
         return $this->pages[$slug] ?? null;
     }
+
+    public function getChildrenOf(string $slug): array
+    {
+        // TODO: Implement getChildrenOf() method.
+    }
 }

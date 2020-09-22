@@ -4,7 +4,7 @@
 namespace Jokuf\Site\DTO;
 
 
-class CreatePageResponseDto
+class ConcretePageResponseDto
 {
     /**
      * @var string|null
@@ -60,9 +60,9 @@ class CreatePageResponseDto
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }

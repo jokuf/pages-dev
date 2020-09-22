@@ -7,8 +7,7 @@ namespace Jokuf\Site\Interactor;
 use Jokuf\Site\Assembler\PageAssembler;
 use Jokuf\Site\Boundary\UpdatePageRequestInterface;
 use Jokuf\Site\Boundary\UpdatePageResponseInterface;
-use Jokuf\Site\DTO\CreatePageRequestDto;
-use Jokuf\Site\DTO\CreatePageResponseDto;
+use Jokuf\Site\DTO\ConcretePageResponseDto;
 use Jokuf\Site\DTO\UpdatePageRequestDto;
 use Jokuf\Site\Entity\Page;
 use Jokuf\Site\Gateway\PageGatewayInterface;
@@ -73,7 +72,7 @@ class UpdatePageInteractor implements UpdatePageRequestInterface
         $page->save($this->gateway);
 
         $this->response->present(
-            new CreatePageResponseDto(
+            new ConcretePageResponseDto(
                 $page->getSlug(),
                 $page->getName(),
                 $page->getTitle(),

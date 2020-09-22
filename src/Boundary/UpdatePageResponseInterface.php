@@ -4,10 +4,10 @@
 namespace Jokuf\Site\Boundary;
 
 
-use Jokuf\Site\DTO\CreatePageResponseDto;
+use Jokuf\Site\DTO\ConcretePageResponseDto;
 
 interface UpdatePageResponseInterface
 
 {
-    public function present(CreatePageResponseDto $response): void;
+    public function present(ConcretePageResponseDto $response): void;
 }

@@ -55,7 +55,7 @@ class CreatePageInteractor implements CreatePageRequestInterface
 
         // emit the response
         $this->response->present(
-            $this->pageAssembler->assmebleResponseDto(
+            $this->pageAssembler->assembleResponseDto(
                 $page
             )
         );
