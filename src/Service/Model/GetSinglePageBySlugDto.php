@@ -4,7 +4,7 @@
 namespace Jokuf\Site\Service\Model;
 
 
-class GetPageRequestDto
+class GetSinglePageBySlugDto
 {
     /**
      * @var string

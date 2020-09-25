@@ -5,7 +5,7 @@ namespace Jokuf\Site\Core\Interactor;
 
 
 use Jokuf\Site\Service\Boundary\GetPagesPresenterInterface;
-use Jokuf\Site\Service\Model\GetPageRequestDto;
+use Jokuf\Site\Service\Model\GetSinglePageBySlugDto;
 use Jokuf\Site\Service\Model\PageCollectionResponseDto;
 use Jokuf\Site\Service\Gateway\PageGatewayInterface;
 
@@ -27,9 +27,9 @@ class GetPagesCollection implements \Jokuf\Site\Service\Boundary\GetPagesRequest
     }
 
     /**
-     * @param GetPageRequestDto $request
+     * @param GetSinglePageBySlugDto $request
      */
-    public function handle(GetPageRequestDto $request): void
+    public function handle(GetSinglePageBySlugDto $request): void
     {
         $response = new PageCollectionResponseDto();
 

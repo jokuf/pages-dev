@@ -3,11 +3,11 @@ namespace Jokuf\Site\Tests\Stories;
 
 use Jokuf\Site\Service\Model\CreatePageRequestDto;
 use Jokuf\Site\Service\Model\DeletePageRequestDto;
-use Jokuf\Site\Service\Model\GetPageRequestDto;
+use Jokuf\Site\Service\Model\GetSinglePageBySlugDto;
 use Jokuf\Site\Service\Model\UpdatePageRequestDto;
 use Jokuf\Site\Core\Interactor\CreatePageInteractor;
 use Jokuf\Site\Core\Interactor\DeletePageInteractor;
-use Jokuf\Site\Core\Interactor\ReadSinglePageInteractor;
+use Jokuf\Site\Core\Interactor\GetSinglePageInteractor;
 use Jokuf\Site\Core\Interactor\UpdatePageInteractor;
 use Jokuf\Site\Tests\Stub\Gateway\InMemoryStorageGatewayInterface;
 use Jokuf\Site\Tests\Stub\Presenter\DeletePagePresenter;
@@ -71,12 +71,12 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
     public function testAsAUserIWantToGetPageBySlug()
     {
         $presenter = new GetPagePresenter();
-        $case = new ReadSinglePageInteractor(
+        $case = new GetSinglePageInteractor(
             self::$storage,
             $presenter
         );
 
-        $case->handle(new GetPageRequestDto('/homepage'));
+        $case->handle(new GetSinglePageBySlugDto('/homepage'));
 
 
         self::assertEquals('Welcome home', $presenter->value->getTitle());

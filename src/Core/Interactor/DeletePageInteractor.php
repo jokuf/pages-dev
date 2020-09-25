@@ -6,9 +6,10 @@ namespace Jokuf\Site\Core\Interactor;
 
 use Jokuf\Site\Service\Boundary\DeletePagePresenterInterface;
 use Jokuf\Site\Service\Boundary\DeletePageRequestInterface;
+use Jokuf\Site\Service\Model\ConcretePageResponseDto;
 use Jokuf\Site\Service\Model\DeletePageRequestDto;
 use Jokuf\Site\Service\Model\DeletePageResponseDto;
-use Jokuf\Site\Service\Model\GetPageRequestDto;
+use Jokuf\Site\Service\Model\GetSinglePageBySlugDto;
 use Jokuf\Site\Core\Entity\Page;
 use Jokuf\Site\Service\Gateway\PageGatewayInterface;
 

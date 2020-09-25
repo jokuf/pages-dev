@@ -4,9 +4,9 @@
 namespace Jokuf\Site\Service\Boundary;
 
 
-use Jokuf\Site\Service\Model\GetPageRequestDto;
+use Jokuf\Site\Service\Model\GetSinglePageBySlugDto;
 
 interface GetPagesRequestInterface
 {
-    public function handle(GetPageRequestDto $request): void;
+    public function handle(GetSinglePageBySlugDto $request): void;
 }
