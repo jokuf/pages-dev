@@ -4,15 +4,17 @@
 namespace Jokuf\Site\Tests\Stub\Presenter;
 
 
-use Jokuf\Site\Boundary\CreatePagePresenterInterface;
-use Jokuf\Site\DTO\CreatePageRequestDto;
-use Jokuf\Site\DTO\ConcretePageResponseDto;
+use Jokuf\Site\Service\Boundary\CreatePagePresenterInterface;
+use Jokuf\Site\Service\Model\CreatePageRequestDto;
+use Jokuf\Site\Service\Model\ConcretePageResponseDto;
 
 class DummyCreatePagePresenterInterface implements CreatePagePresenterInterface
 {
+    /** @var ConcretePageResponseDto */
+    public $value;
 
     public function present(ConcretePageResponseDto $response): void
     {
-        // TODO: Implement present() method.
+        $this->value = $response;
     }
 }

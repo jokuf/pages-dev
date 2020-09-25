@@ -4,20 +4,35 @@
 namespace Jokuf\Site\Tests\Stub\Gateway;
 
 
-use Jokuf\Site\Data\PageData;
-use Jokuf\Site\Entity\Page;
+use Jokuf\Site\Service\Data\PageData;
+use Jokuf\Site\Core\Entity\Page;
 
-class InMemoryStorageGatewayInterface implements \Jokuf\Site\Gateway\PageGatewayInterface
+class InMemoryStorageGatewayInterface implements \Jokuf\Site\Service\Gateway\PageGatewayInterface
 {
+    private $id=0;
     private $pages;
 
-    public function save(PageData $data): void
+    public function save(PageData $data): PageData
     {
         if ($data->getSlug() === null || empty($data->getSlug())) {
             throw new \InvalidArgumentException();
         }
 
-        $this->pages[$data->getSlug()] = $data;
+        $this->pages[$data->getSlug()] = new PageData(
+            ++$this->id,
+            $data->getParent(),
+            $data->getSlug(),
+            $data->getName(),
+            $data->getTitle(),
+            $data->getContent(),
+            $data->getTags(),
+            $data->getLevel(),
+            $data->isLocked(),
+            $data->getTemplate()
+        );
+
+
+        return $this->pages[$data->getSlug()];
     }
 
     public function delete(PageData $data): bool
@@ -36,8 +51,23 @@ class InMemoryStorageGatewayInterface implements \Jokuf\Site\Gateway\PageGateway
         return $this->pages[$slug] ?? null;
     }
 
-    public function getChildrenOf(string $slug): array
+    public function getChildren(PageData $pageData): array
     {
         // TODO: Implement getChildrenOf() method.
+    }
+
+    public function getPageSlug(Page $page): ?string
+    {
+        foreach ($this->pages as $k => $v) {
+            if ($page === $v) {
+                return $k;
+            }
+        }
+
+        return null;
+    }
+
+    public function savePageSlug(Page $page, $slug): bool
+    {
     }
 }

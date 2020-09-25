@@ -4,8 +4,8 @@
 namespace Jokuf\Site\Tests\Stub\Presenter;
 
 
-use Jokuf\Site\Boundary\DeletePagePresenterInterface;
-use Jokuf\Site\DTO\DeletePageResponseDto;
+use Jokuf\Site\Service\Boundary\DeletePagePresenterInterface;
+use Jokuf\Site\Service\Model\DeletePageResponseDto;
 
 class DeletePagePresenter implements DeletePagePresenterInterface
 {
