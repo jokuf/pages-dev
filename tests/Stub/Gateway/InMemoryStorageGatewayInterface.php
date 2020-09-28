@@ -12,6 +12,12 @@ class InMemoryStorageGatewayInterface implements \Jokuf\Site\Service\Gateway\Pag
     private $id=0;
     private $pages;
 
+    public function reset()
+    {
+        $this->id = 0;
+        $this->pages = [];
+    }
+
     public function save(PageData $data): PageData
     {
         if ($data->getSlug() === null || empty($data->getSlug())) {

@@ -10,7 +10,7 @@ use Jokuf\Site\Service\Model\ConcretePageResponseDto;
 use Jokuf\Site\Service\Model\GetPageRequestDto;
 use Jokuf\Site\Service\Gateway\PageGatewayInterface;
 
-class ReadSinglePageInteractor implements GetPageRequestInterface
+class GetPageBySlugInteractor implements GetPageRequestInterface
 {
     /**
      * @var PageGatewayInterface
@@ -30,8 +30,9 @@ class ReadSinglePageInteractor implements GetPageRequestInterface
 
     public function handle(GetPageRequestDto $request): void
     {
-        if (1 === preg_match('#^[a-z0-9-/]+$#', $request->getSlug())) {
-            if ($pageData = $this->gateway->getBySlug($request->getSlug())) {
+        if (false !== ($parsedSlug = parse_url($request->getSlug()))) {
+            $path = $parsedSlug['path'];
+            if ($pageData = $this->gateway->getBySlug($path)) {
                 $this->presenter->present(
                     new ConcretePageResponseDto(
                         $pageData->getSlug(),

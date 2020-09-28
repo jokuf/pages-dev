@@ -7,13 +7,14 @@ use Jokuf\Site\Service\Model\GetPageRequestDto;
 use Jokuf\Site\Service\Model\UpdatePageRequestDto;
 use Jokuf\Site\Core\Interactor\CreatePageInteractor;
 use Jokuf\Site\Core\Interactor\DeletePageInteractor;
-use Jokuf\Site\Core\Interactor\ReadSinglePageInteractor;
+use Jokuf\Site\Core\Interactor\GetPageBySlugInteractor;
 use Jokuf\Site\Core\Interactor\UpdatePageInteractor;
 use Jokuf\Site\Tests\Stub\Gateway\InMemoryStorageGatewayInterface;
 use Jokuf\Site\Tests\Stub\Presenter\DeletePagePresenter;
 use Jokuf\Site\Tests\Stub\Presenter\DummyCreatePagePresenterInterface;
 use Jokuf\Site\Tests\Stub\Presenter\GetPagePresenter;
 use Jokuf\Site\Tests\Stub\Presenter\UpdatePagePresenter;
+use PHPUnit\Util\Xml\ValidationResult;
 
 class TestPageUserStories extends \PHPUnit\Framework\TestCase
 {
@@ -43,13 +44,16 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
         );
         $useCase->handle($pageDTO);
 
-        self::assertNotNull(self::$storage->getBySlug('/homepage'));
+        self::assertNotNull(self::$storage->getBySlug('/'));
     }
 
-    public function testAsAUserIWantToUpdatePageContent()
+    /**
+     * @depends testAsAUserIWantToCreateAPage
+     */
+    public function testAsUserIWantToUpdateAPage(): void
     {
         $request = new UpdatePageRequestDto(
-            '/homepage',
+            '/',
             'jokuf-asdfa',
             null,
             null,
@@ -59,29 +63,47 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
         );
 
         $response = new UpdatePagePresenter();
-        $useCase = new UpdatePageInteractor(self::$storage,$response);
+        $useCase = new UpdatePageInteractor(self::$storage, $response);
         $useCase->handle($request);
 
 
         self::assertEquals('jokuf-asdfa', $response->value->getName());
         self::assertEquals('Welcome home', $response->value->getTitle());
-        self::assertNotEquals('/homepage', $response->value->getSlug());
+        self::assertEquals('/', $response->value->getSlug());
     }
 
+    /**
+     * @depends testAsAUserIWantToCreateAPage
+     */
     public function testAsAUserIWantToGetPageBySlug()
     {
         $presenter = new GetPagePresenter();
-        $case = new ReadSinglePageInteractor(
+        $case = new GetPageBySlugInteractor(
             self::$storage,
             $presenter
         );
 
-        $case->handle(new GetPageRequestDto('/homepage'));
+        $case->handle(new GetPageRequestDto('/'));
 
+        self::assertEquals('Welcome home', $presenter->value->getTitle());
+
+        $case->handle(new GetPageRequestDto('/?arg=true&arg2=false'));
+
+        self::assertEquals('Welcome home', $presenter->value->getTitle());
+
+        $case->handle(new GetPageRequestDto('https://localhost/?arg=true&arg2=false'));
+
+        self::assertEquals('Welcome home', $presenter->value->getTitle());
+
+        $case->handle(new GetPageRequestDto('/?arg=true&arg2=false'));
 
         self::assertEquals('Welcome home', $presenter->value->getTitle());
     }
 
+
+    /**
+     * @depends testAsAUserIWantToCreateAPage
+     */
     public function testAsUserIWantToDeleteAPage()
     {
         $presenter = new DeletePagePresenter();
@@ -92,7 +114,7 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
 
         $useCase->handle(
             new DeletePageRequestDto(
-                '/homepage'
+                '/'
             )
         );
 
@@ -100,14 +122,69 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
 
         $useCase->handle(
             new DeletePageRequestDto(
-                '/homepage'
+                '/'
             )
         );
 
         self::assertFalse($presenter->value->isSuccessful());
     }
 
-    public function testAsUserIWantToUpdateAPage() {
-        self::assertTrue(true);
+    public function testCheckSlugValueIsInExpectedFormat() {
+        self::$storage->reset();
+
+        $createPageUseCase = new CreatePageInteractor(
+            self::$storage,
+            new DummyCreatePagePresenterInterface()
+        );
+
+        $pageDTO = new CreatePageRequestDto(
+            null,
+            'Home',
+            'Welcome',
+            'description',
+            [],
+            0,
+            false,
+            'homepage'
+        );
+
+
+        $createPageUseCase->handle($pageDTO);
+
+        $pageDTO = new CreatePageRequestDto(
+            '/',
+            'products',
+            'Group page',
+            'description',
+            [],
+            0,
+            false,
+            'product-category'
+        );
+        $createPageUseCase->handle($pageDTO);
+
+
+        $pageDTO = new CreatePageRequestDto(
+            '/products',
+            'Concrete product',
+            'Concrete product title',
+            'Product description',
+            [],
+            0,
+            false,
+            'product'
+        );
+
+        $createPageUseCase->handle($pageDTO);
+        $presenter = new GetPagePresenter();
+        $case = new GetPageBySlugInteractor(
+            self::$storage,
+            $presenter
+        );
+
+        $case->handle(new GetPageRequestDto('/products/concrete-product'));
+
+        self::assertNotNull($presenter->value);
+        self::assertEquals('Concrete product title', $presenter->value->getTitle());
     }
 }

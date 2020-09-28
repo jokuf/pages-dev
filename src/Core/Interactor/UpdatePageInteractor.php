@@ -31,14 +31,15 @@ class UpdatePageInteractor implements UpdatePageRequestInterface
 
     public function handle(UpdatePageRequestDto $request): void
     {
-        if (null === $request->getSlug()) {
-            throw new \InvalidArgumentException();
+        $data = null;
+        if (null === $request->getSlug()) throw new \InvalidArgumentException();
+
+
+        if (false !== ($parsedUrl = parse_url($request->getSlug()))) {
+            $data = $this->gateway->getBySlug($parsedUrl['path']);
         }
 
-        $data = $this->gateway->getBySlug($request->getSlug());
-        if (null === $data) {
-            throw new \DomainException('Page not found.');
-        }
+        if (null === $data) throw new \DomainException('Page not found.');
 
         $page = new Page($data);
 

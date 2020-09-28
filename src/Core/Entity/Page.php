@@ -60,8 +60,11 @@ class Page
 
     public function __construct(PageData $data) {
         $parentPageData = $data->getParent();
+        if (null !== $parentPageData) {
+            $this->parent = new self($parentPageData);
+        }
+
         $this->id       = $data->getId();
-        $this->parent   = $parentPageData? new self($parentPageData) : null;
         $this->name     = $data->getName();
         $this->title    = $data->getTitle();
         $this->content  = $data->getContent();
@@ -83,9 +86,14 @@ class Page
 
     public function getSlug(): string
     {
-        $slug = $this->slug;
+        if (null === $this->parent) {
+            $this->slug = '/';
+
+            return $this->slug;
+        }
+
         // if the slug is set this means that the page is not new
-        if ($slug) {
+        if (null !== ($slug = $this->slug)) {
             // if the page name is changed - regenerate the slug
             if (isset($this->dirtyFields['name'])) {
                 $parts = explode('/', $slug);
@@ -93,9 +101,8 @@ class Page
                 $slug = sprintf("%s/%s", $baseSlug, $this->slugify($this->name));
             }
         } else {
-            $baseSlug = '';
-            if (null !== $this->parent) $baseSlug = $this->parent->getSlug();
-            $slug = sprintf("%s/%s", $baseSlug, $this->slugify($this->name));
+            $baseSlug = $this->parent->getSlug();
+            $slug = sprintf("%s%s%s", $baseSlug, $baseSlug === '/' ? '' : '/', $this->slugify($this->name));
         }
 
         $this->slug = $slug;
@@ -107,7 +114,6 @@ class Page
     {
         $data          = $storage->save(self::export($this));
         $this->id      = $data->getId();
-        $this->parent  = $data->getParent();
         $this->deleted = false;
     }
 
