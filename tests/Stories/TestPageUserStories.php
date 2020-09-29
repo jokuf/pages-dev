@@ -178,4 +178,23 @@ class TestPageUserStories extends \PHPUnit\Framework\TestCase
         self::assertNotNull(self::$presenter->value);
         self::assertEquals('Concrete product title', self::$presenter->value->getTitle());
     }
+
+    /**
+     * @depends testCheckSlugValueIsInExpectedFormat
+     */
+    public function testICanDeletePageByUrlWhichContainsQueryString(): void
+    {
+        $useCase = new PageInteractor(
+            self::$storage,
+            self::$presenter
+        );
+
+        $useCase->delete(
+            new DeletePageRequestDto(
+                '/products?query=1'
+            )
+        );
+
+        self::assertTrue(self::$presenter->value->isSuccessful());
+    }
 }

@@ -94,12 +94,9 @@ class Page
 
         // if the slug is set this means that the page is not new
         if (null !== ($slug = $this->slug)) {
-            // if the page name is changed - regenerate the slug
-            if (isset($this->dirtyFields['name'])) {
-                $parts = explode('/', $slug);
-                $baseSlug = implode('/', array_slice($parts, 0, -1));
-                $slug = sprintf("%s/%s", $baseSlug, $this->slugify($this->name));
-            }
+            $parts = explode('/', $slug);
+            $baseSlug = implode('/', array_slice($parts, 0, -1));
+            $slug = sprintf("%s/%s", $baseSlug, $this->slugify($this->name));
         } else {
             $baseSlug = $this->parent->getSlug();
             $slug = sprintf("%s%s%s", $baseSlug, $baseSlug === '/' ? '' : '/', $this->slugify($this->name));

@@ -15,7 +15,6 @@ class InMemoryStorageGatewayInterface implements \Jokuf\Site\Service\Gateway\Pag
     public function reset()
     {
         $this->id = 0;
-        $this->pages = [];
     }
 
     public function save(PageData $data): PageData
@@ -59,7 +58,14 @@ class InMemoryStorageGatewayInterface implements \Jokuf\Site\Service\Gateway\Pag
 
     public function getChildren(PageData $pageData): array
     {
-        // TODO: Implement getChildrenOf() method.
+        $collection = [];
+        foreach ($this->pages as $k => $page) {
+            if ($pageData->getSlug() === $page->getSlug()) {
+                $collection[] = $page;
+            }
+        }
+
+        return $collection;
     }
 
     public function getPageSlug(Page $page): ?string

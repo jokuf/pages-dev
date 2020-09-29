@@ -31,7 +31,6 @@ class PageInteractor implements PageBoundaryInterface
      */
     private $pageAssembler;
 
-
     /**
      * PageInteractor constructor.
      * @param PageGatewayInterface $gateway
@@ -45,6 +44,9 @@ class PageInteractor implements PageBoundaryInterface
 
     }
 
+    /**
+     * @param CreatePageRequestDto $request
+     */
     public function create(CreatePageRequestDto $request): void
     {
         // validate the dto
@@ -63,6 +65,9 @@ class PageInteractor implements PageBoundaryInterface
         );
     }
 
+    /**
+     * @param UpdatePageRequestDto $request
+     */
     public function update(UpdatePageRequestDto $request): void
     {
         $data = null;
@@ -107,27 +112,32 @@ class PageInteractor implements PageBoundaryInterface
         );
     }
 
+    /**
+     * @param DeletePageRequestDto $request
+     */
     public function delete(DeletePageRequestDto $request): void
     {
         $response = new DeletePageResponseDto(false);
 
-        if (1 === preg_match('#^[a-z0-9-/]+$#', $request->getSlug())) {
-            $data = $this->gateway->getBySlug($request->getSlug());
+        if (false !== ($parsedSlug = parse_url($request->getSlug()))) {
 
-            if (null !== $data) {
-                $page = new Page($data);
-
+            if ($pageData = $this->gateway->getBySlug($parsedSlug['path'])) {
+                $page = new Page($pageData);
                 $response = new DeletePageResponseDto(
                     $page->delete(
                         $this->gateway
                     )
                 );
             }
+
         }
 
         $this->presenter->presentDeletedPage($response);
     }
 
+    /**
+     * @param GetPageRequestDto $request
+     */
     public function getBySlug(GetPageRequestDto $request): void
     {
         if (false !== ($parsedSlug = parse_url($request->getSlug()))) {
